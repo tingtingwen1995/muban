@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="css/jquery.fullPage.css">
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.fullPage.js"></script>
+        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <title>test</title>
+    </head>
+    <body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-offset-9 col-md-3">
+                <a href="#">登录和注册</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                这是logo
+            </div>
+            <div class="col-md-8">
+                <ul class="nav nav-pills">
+                    <li class="active"><a href="#/">首页</a></li>
+                    <li><a href="#/service">服务</a></li>
+                    <li><a href="#/shopping-mall">商城</a></li>
+                    <li><a href="#/about-us">关于我们</a></li>
+                </ul>
+            </div>
+            <div id="app">
+                页面好像出了点小问题
+            </div>
+    </div>
+
+    <script>
+        //hash
+        function Router(){
+            //有个名字，用做一件事情
+            this.routes = [];
+            //
+            this.currentUrl = "";
+            this.init();//先让他初始化监听事件，然后才调用路由
+        }
+
+        Router.prototype = {
+            constructor:Router,
+            router:function(path,callback){
+                this.routes[path] = callback || function(){};
+            },
+            refresh:function(){
+
+                //改变当前点中的样式
+                 $("li ").each(function(){
+                     var href = $(this).find("a").attr("href").slice(1)
+                     if(href === location.hash.slice(1)){
+                        $(".active").removeClass("active");
+                        $(this).addClass("active")
+                     }
+                });
+
+                this.currentUrl = location.hash.slice(1) || '/';
+                this.routes[this.currentUrl]();//通过路由名字去调用相对应的方法
+            },
+            init:function(){//监听页面：加载的时候、监听改变的时候
+                window.addEventListener("load",this.refresh.bind(this),false);
+                window.addEventListener("hashchange",this.refresh.bind(this),false);
+            }
+        }
+
+        // var appObj = document.getElementById("app");
+        function changeText(text){
+            // appObj.innerHTML = text;
+            $('#app').load(text);
+        }
+
+        var router = new Router();
+        router.router("/",function(){
+            changeText("html/home.html");
+        });
+        router.router("/service",function(){
+            changeText("../xiniuyun/html/service.html");
+        });
+        router.router("/shopping-mall",function(){
+            changeText("../xiniuyun/html/shopping.html");
+        });
+        router.router("/about-us",function(){
+            changeText("../xiniuyun/html/about.html");
+        });
+
+    </script>
+    </body>
+</html>
